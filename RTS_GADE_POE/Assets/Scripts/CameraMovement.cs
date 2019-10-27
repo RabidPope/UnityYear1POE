@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-
+    private float ZoomAmount = 0; //With Positive and negative values
+    private float MaxToClamp = 10;
+    private float ROTSpeed = 10;
+    private Vector3 lastPosition;
     [SerializeField] float speed = 10;
     // Start is called before the first frame update
     void Start()
@@ -16,41 +19,58 @@ public class CameraMovement : MonoBehaviour
     void Update()
     {
 
-        CameraMove();
-        CameraZoom();
+        MouseZoom();
+        KeyboardZoom();
         CameraTurn();
+        MousePan();
     }
 
-    void CameraZoom()
+    void KeyboardZoom()
     {
-        if (Input.GetKey(KeyCode.Q))
+        if (Input.GetKey(KeyCode.W))
         {
-            transform.position += new Vector3(0, -speed * Time.deltaTime * 10, 0);
+            transform.position += new Vector3(0, -speed * Time.deltaTime * 5, 0);
         }
-        else if (Input.GetKey(KeyCode.E))
+        else if (Input.GetKey(KeyCode.S))
         {
 
-            transform.position += new Vector3(0, speed * Time.deltaTime * 10, 0);
+            transform.position += new Vector3(0, speed * Time.deltaTime * 5, 0);
         }
     }
 
-    void CameraMove()
+    void MouseZoom()
     {
-        float vertical = Input.GetAxis("Vertical");
-        float horizontal = Input.GetAxis("Horizontal");
-
-        transform.position += new Vector3(speed * Time.deltaTime * horizontal, 0, speed * Time.deltaTime * vertical);
+        ZoomAmount += Input.GetAxis("Mouse ScrollWheel");
+        ZoomAmount = Mathf.Clamp(ZoomAmount, -MaxToClamp, MaxToClamp);
+        var translate = Mathf.Min(Mathf.Abs(Input.GetAxis("Mouse ScrollWheel")), MaxToClamp - Mathf.Abs(ZoomAmount));
+        gameObject.transform.Translate(0, 0, translate * ROTSpeed * Mathf.Sign(Input.GetAxis("Mouse ScrollWheel")));
     }
+   
 
     void CameraTurn()
     {
-        if (Input.GetKey(KeyCode.R))
+        if (Input.GetKey(KeyCode.D))
         {
             transform.Rotate(Vector3.forward, 50f * Time.deltaTime);
         }
-        else if (Input.GetKey(KeyCode.F))
+        else if (Input.GetKey(KeyCode.A))
         {
             transform.Rotate(Vector3.back, 50f * Time.deltaTime);
+        }
+    }
+
+    void MousePan()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            lastPosition = Input.mousePosition;
+        }
+
+        if (Input.GetMouseButton(0))
+        {
+            Vector3 delta = Input.mousePosition - lastPosition;
+            transform.Translate(delta.x * -0.01f, delta.y * -0.01f, 0);
+            lastPosition = Input.mousePosition;
         }
     }
 }

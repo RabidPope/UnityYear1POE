@@ -43,7 +43,7 @@ using System.Runtime.Serialization.Formatters.Binary;
                     base.yPos = Math.Max(0, Math.Min(Map.MapSizeY -1, base.yPos + rng.Next(-1, 2)));
                     base.xPos = Math.Max(0, Math.Min(Map.MapSizeX -1, base.xPos + rng.Next(-1, 2)));
                 }
-                Map.UnitsOnField[ownIndex] = this;
+            GameManager.UnitsOnField[ownIndex] = this;
             }
         }
         public override void Engage(int index, string type)
@@ -52,17 +52,17 @@ using System.Runtime.Serialization.Formatters.Binary;
             MeleeUnit tempMUnit;
             RangedUnit tempRUnit;
             
-            if (Map.UnitsOnField[index].ToString() == "Knight")
+            if (GameManager.UnitsOnField[index].ToString() == "Knight")
             {
-                    tempMUnit = (MeleeUnit)Map.UnitsOnField[index];
+                    tempMUnit = (MeleeUnit)GameManager.UnitsOnField[index];
                     tempMUnit.Hp = tempMUnit.Hp - base.attack;
-                    Map.UnitsOnField[index] = tempMUnit;//Do damage to unit at index
+                GameManager.UnitsOnField[index] = tempMUnit;//Do damage to unit at index
             }
             else
             {
-                    tempRUnit = (RangedUnit)Map.UnitsOnField[index];
+                    tempRUnit = (RangedUnit)GameManager.UnitsOnField[index];
                     tempRUnit.Hp = tempRUnit.Hp - base.attack;
-                    Map.UnitsOnField[index] = tempRUnit;// Do damage to unit at index
+                GameManager.UnitsOnField[index] = tempRUnit;// Do damage to unit at index
             }
             
            
@@ -84,20 +84,20 @@ using System.Runtime.Serialization.Formatters.Binary;
             MeleeUnit tempMUnit;
             RangedUnit tempRUnit;
             int[] listOfTargets = new int[0];
-
+        attacking = false;
             string type = "";
            
             int nearest = 999;
-            int[] positionOfNearestU = new int[] { this.yPos, this.xPos };//Store Position of nearest unit
-            int[] positionOfNearestB = new int[] { this.yPos, this.xPos };//Store Position of nearest building
+            int[] positionOfNearest = new int[] { this.yPos, this.xPos };//Store Position of nearest unit
+            
             bool act = false;
             
             //Find closest unit
-            for (int i = 0; i < Map.UnitsOnField.Length; i++)
+            for (int i = 0; i < GameManager.UnitsOnField.Length; i++)
             {
-                if (Map.UnitsOnField[i].ToString() == "Knight")
+                if (GameManager.UnitsOnField[i].ToString() == "Knight")
                 {
-                    tempMUnit = (MeleeUnit)Map.UnitsOnField[i];
+                    tempMUnit = (MeleeUnit)GameManager.UnitsOnField[i];
                     if (tempMUnit.Faction != base.faction && tempMUnit.Hp > 0)
                     {
                         act = true;
@@ -113,14 +113,14 @@ using System.Runtime.Serialization.Formatters.Binary;
                                 listOfTargets[listOfTargets.Length - 1] = i;
                             }
                                                         
-                            positionOfNearestU[1] = tempMUnit.XPos;
-                            positionOfNearestU[0] = tempMUnit.YPos;
+                            positionOfNearest[1] = tempMUnit.XPos;
+                            positionOfNearest[0] = tempMUnit.YPos;
                         }
                     }
                 }
-                else if (Map.UnitsOnField[i].ToString() == "Archer")
+                else if (GameManager.UnitsOnField[i].ToString() == "Archer")
                 {
-                    tempRUnit = (RangedUnit)Map.UnitsOnField[i];
+                    tempRUnit = (RangedUnit)GameManager.UnitsOnField[i];
                     if (tempRUnit.Faction != base.faction && tempRUnit.Hp > 0)
                     {
                         act = true;
@@ -135,8 +135,8 @@ using System.Runtime.Serialization.Formatters.Binary;
                                 Array.Resize(ref listOfTargets, listOfTargets.Length + 1);
                                 listOfTargets[listOfTargets.Length - 1] = i;
                             }                                                       
-                            positionOfNearestU[1] = tempRUnit.XPos;
-                            positionOfNearestU[0] = tempRUnit.YPos;
+                            positionOfNearest[1] = tempRUnit.XPos;
+                            positionOfNearest[0] = tempRUnit.YPos;
                         }
                     }
                 }
@@ -145,6 +145,7 @@ using System.Runtime.Serialization.Formatters.Binary;
             {
                 if (listOfTargets.Length > 0)
                 {
+                attacking = true;
                     for (int i = 0; i < listOfTargets.Length; ++i)
                     {
                         Engage(listOfTargets[i], type);
@@ -153,7 +154,7 @@ using System.Runtime.Serialization.Formatters.Binary;
                 }
                 else
                 {
-                    Move(positionOfNearestU, ownIndex);
+                    Move(positionOfNearest, ownIndex);
                 }
             }
         }

@@ -2,19 +2,20 @@
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine;
 
-    class Map
+    class Map : MonoBehaviour
     {
-        protected static Unit[] unitsOnField;
-        protected static Building[] buildingsOnField;
+        //protected static Unit[] unitsOnField;
+        //protected static Building[] buildingsOnField;
         protected int armySize;
-        protected char[,] mapSymbols;
-        protected Random rng = new Random();
+        protected static char[,] mapSymbols;
+        protected System.Random rng = new System.Random();
         protected int buildings;
         private static int mapSizeY;
         private static int mapSizeX;
         private int nArmySize;
-
+        
 
         public Map(int armySize, int nArmySize, int mapSizeY, int mapSizeX, int buildings)
         {
@@ -26,12 +27,12 @@ using System.Runtime.Serialization.Formatters.Binary;
             InitialiseMap();
         }
 
-        public static Unit[] UnitsOnField { get => unitsOnField; set => unitsOnField = value; }
-        public static Building[] BuildingsOnField { get => buildingsOnField; set => buildingsOnField = value; }
+        //public static Unit[] UnitsOnField { get => unitsOnField; set => unitsOnField = value; }
+        //public static Building[] BuildingsOnField { get => buildingsOnField; set => buildingsOnField = value; }
         public static int MapSizeY { get => mapSizeY; }
         public static int MapSizeX { get => mapSizeX; }
 
-        public void LoadGame()
+        /*public void LoadGame()
         {
             BinaryFormatter bFormat = new BinaryFormatter();
 
@@ -75,6 +76,7 @@ using System.Runtime.Serialization.Formatters.Binary;
             }
 
         }
+        */
 
         public void InitialiseMap()
         {
@@ -88,19 +90,19 @@ using System.Runtime.Serialization.Formatters.Binary;
             }
         }
 
-        public void SpawnUnits()
+        public Unit[] SpawnUnits()
         {
             int type;
             int xRoll;
             int yRoll;
-            UnitsOnField = new Unit[armySize + nArmySize];
+            Unit []unitsOnField = new Unit[armySize + nArmySize];
             int unitCount = 0; //how many units intside array
                                //Spawn Attack Units
 
             for (int unitPlaced = 0; unitPlaced < armySize; unitPlaced++)
             {
-                xRoll = rng.Next(0, mapSizeX);
-                yRoll = rng.Next(0, mapSizeY);
+                xRoll = rng.Next((0), mapSizeX);
+                yRoll = rng.Next((0), mapSizeY);
 
                 if (mapSymbols[yRoll, xRoll] == '.')//Use 2d symbols to determine open positions
                 {
@@ -110,12 +112,12 @@ using System.Runtime.Serialization.Formatters.Binary;
 
                     if (type == 0)
                     {
-                        UnitsOnField[unitCount] = new MeleeUnit(xRoll, yRoll, team, false);
+                        unitsOnField[unitCount] = new MeleeUnit(xRoll, yRoll, team, false);
                         unitCount++;
                     }
                     else
                     {
-                        UnitsOnField[unitCount] = new RangedUnit(xRoll, yRoll, team, false);
+                        unitsOnField[unitCount] = new RangedUnit(xRoll, yRoll, team, false);
                         unitCount++;
                     }
                 }
@@ -123,16 +125,17 @@ using System.Runtime.Serialization.Formatters.Binary;
                 {
                     unitPlaced--;//No open position, redo
                 }
+            
             }
             //Spawn Wizards
             for (int unitPlaced = 0; unitPlaced < nArmySize; unitPlaced++)
             {
                 xRoll = rng.Next(0, mapSizeX);
-                yRoll = rng.Next(0, mapSizeY);
+                yRoll = rng.Next((0), mapSizeY);
                 if (mapSymbols[yRoll, xRoll] == '.')//Use 2d symbols to determine open positions
                 {
                     int team = 2;
-                    UnitsOnField[unitCount] = new WizardUnit(xRoll, yRoll, team, false);
+                    unitsOnField[unitCount] = new WizardUnit(xRoll, yRoll, team, false);
                     unitCount++;
                 }
                 else
@@ -140,15 +143,16 @@ using System.Runtime.Serialization.Formatters.Binary;
                     unitPlaced--;//No open position, redo
                 }
             }
+            return unitsOnField;
         }
 
 
-        public void SpawnBuildings()
+        public Building [] SpawnBuildings()
         {
 
             int xRoll;
             int yRoll;
-            buildingsOnField = new Building[buildings];
+            Building [] buildingsOnField = new Building[buildings];
             int buildingCount = 0;
             //Spawn Attack Units
             for (int buildingsPlaced = 0; buildingsPlaced < buildings; buildingsPlaced++)
@@ -180,27 +184,37 @@ using System.Runtime.Serialization.Formatters.Binary;
                         buildingsOnField[buildingCount] = new FactoryBuilding(xRoll, yRoll, team, unitType, spawnPoint);
                         buildingCount++;
                     }
+                    
                 }
                 else
                 {
                     buildingsPlaced--;//No open position, redo
                 }
             }
+        return buildingsOnField;
         }
 
 
         public void AddUnit(Unit newUnit)
         {
-            Unit[] tempArray = unitsOnField;
-            unitsOnField = new Unit[tempArray.Length + 1];
+            
+            Unit[] tempArray = GameManager.UnitsOnField;
+            GameManager.UnitsOnField = new Unit[tempArray.Length + 1];
 
             for (int i = 0; i < tempArray.Length; i++)
             {
-                unitsOnField[i] = tempArray[i];
+            GameManager.UnitsOnField[i] = tempArray[i];
             }
-            unitsOnField[unitsOnField.Length - 1] = newUnit;
+            GameManager.UnitsOnField[GameManager.UnitsOnField.Length - 1] = newUnit;
+        
         }
-
+        
+        /*
+        
+    
+        
+            
+        }
         public string UpdateMap()
         {
             //variables
@@ -214,19 +228,25 @@ using System.Runtime.Serialization.Formatters.Binary;
             FactoryBuilding tempFBuilding;
 
             //Clean map so old unit symbols are removed
-            InitialiseMap();
+             //InitialiseMap();
 
             //Re-fill mapSymbols array with units
+            var clones = GameObject.FindGameObjectsWithTag("clone");
+            foreach (var clone in clones)
+            {
+                Destroy(clone);
+            }
             for (int i = 0; i < unitsOnField.Length; i++)
             {
                 tempUnit = unitsOnField[i];
                 if (tempUnit.ToString() == "Knight")
                 {
-
+                    
                     tempMUnit = (MeleeUnit)tempUnit;
                     if (tempMUnit.Hp > 0)
                     {
                         mapSymbols[tempMUnit.YPos, tempMUnit.XPos] = tempMUnit.Shape;
+                        Instantiate(meleePrefab, new Vector3(tempMUnit.XPos, 0, tempMUnit.YPos), new Quaternion(0, 0, 0, 0));
                     }
                 }
                 else if (tempUnit.ToString() == "Archer")
@@ -280,6 +300,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 
             }
             return map;
-        }
+        }*/
     }
 

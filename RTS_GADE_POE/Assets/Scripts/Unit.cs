@@ -1,10 +1,10 @@
 ﻿using System;
-
+using UnityEngine;
 
 
     [Serializable]
-    abstract class Unit
-    {
+    abstract class Unit : MonoBehaviour
+{
 
         protected int xPos;
         protected int yPos;
@@ -16,7 +16,7 @@
         protected int faction;
         protected char shape;
         protected bool attacking;
-        protected string name;
+        
 
         public Unit(string name, int xPos, int yPos, int hp, int speed, int attack, int range, int faction, char shape, bool attacking)
         {
@@ -30,7 +30,7 @@
             this.faction = faction;
             this.shape = shape;
             this.attacking = attacking;
-            this.name = name;
+            
         }
 
         public abstract void Move(int[] position, int ownIndex);

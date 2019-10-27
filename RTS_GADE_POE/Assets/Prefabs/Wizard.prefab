@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4279942669729559543}
   - component: {fileID: 6935777949071777660}
   - component: {fileID: 1140863874433886304}
-  - component: {fileID: 5960919893279508187}
   m_Layer: 0
   m_Name: Wizard
   m_TagString: clone
@@ -78,16 +77,3 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!135 &5960919893279508187
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4663223952046800952}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}

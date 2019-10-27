@@ -51,35 +51,35 @@ using System.IO;
             }
             
             //Save buildings
-            for (int i = 0; i < Map.BuildingsOnField.Length; i++)
+            for (int i = 0; i < GameManager.BuildingsOnField.Length; i++)
             {
-               if(Map.BuildingsOnField[i].ToString() == "Resource Building")
+               if(GameManager.BuildingsOnField[i].ToString() == "Resource Building")
                 {
-                    tempRBuilding = (ResourceBuilding)Map.BuildingsOnField[i];
+                    tempRBuilding = (ResourceBuilding)GameManager.BuildingsOnField[i];
                     tempRBuilding.Save();
                 }
                else
                 {
-                    tempFBuilding = (FactoryBuilding)Map.BuildingsOnField[i];
+                    tempFBuilding = (FactoryBuilding)GameManager.BuildingsOnField[i];
                     tempFBuilding.Save();
                 }
             }
             //Save units
-            for (int i = 0; i < Map.UnitsOnField.Length; i++)
+            for (int i = 0; i < GameManager.UnitsOnField.Length; i++)
             {
-                if (Map.UnitsOnField[i].ToString() == "Knight")
+                if (GameManager.UnitsOnField[i].ToString() == "Knight")
                 {
-                    tempMUnit = (MeleeUnit)Map.UnitsOnField[i];
+                    tempMUnit = (MeleeUnit)GameManager.UnitsOnField[i];
                     tempMUnit.Save();
                 }
-                else if (Map.UnitsOnField[i].ToString() == "Archer")
+                else if (GameManager.UnitsOnField[i].ToString() == "Archer")
                 {
-                    tempRUnit = (RangedUnit)Map.UnitsOnField[i];
+                    tempRUnit = (RangedUnit)GameManager.UnitsOnField[i];
                     tempRUnit.Save();
                 }
-                else if (Map.UnitsOnField[i].ToString() == "Wizard")
+                else if (GameManager.UnitsOnField[i].ToString() == "Wizard")
                 {
-                    WizardUnit tempWUnit = (WizardUnit)Map.UnitsOnField[i];
+                    WizardUnit tempWUnit = (WizardUnit)GameManager.UnitsOnField[i];
                     tempWUnit.Save();
                 }
             }
@@ -98,15 +98,15 @@ using System.IO;
                        
             int faction;
             unitInfo = "";
-            int unitsLeft = Map.UnitsOnField.Length;
-            int buildingsLeft = Map.BuildingsOnField.Length;
+            int unitsLeft = GameManager.UnitsOnField.Length;
+            int buildingsLeft = GameManager.BuildingsOnField.Length;
             
 
 
             //Update Unit Actions
             for (int i = 0; i < unitsLeft; i++)//For each unit
             {                
-                tempUnit = Map.UnitsOnField[i]; //Melee               
+                tempUnit = GameManager.UnitsOnField[i]; //Melee               
                 if (tempUnit.ToString() == "Knight")
                 {
                     tempMUnit = (MeleeUnit)tempUnit;
@@ -186,7 +186,7 @@ using System.IO;
             //Update Building Actions
             for (int i = 0; i < buildingsLeft; i++)
             {
-                tempBuilding = Map.BuildingsOnField[i];
+                tempBuilding = GameManager.BuildingsOnField[i];
 
                 if (tempBuilding.ToString() == "Resource Building")
                 {
@@ -255,7 +255,7 @@ using System.IO;
                 }
                 
             }
-
+           
             teamResources = "Team 1" + "\n" + "Wood: " + team1Wood + "\n" + "Steel: " + team1Steel + "\n" + "\n" + "Team 2" + "\n" + "Wood: " + team2Wood + "\n" + "Steel: " + team2Steel;
             rounds = rounds + 1;//Update rounds
             
