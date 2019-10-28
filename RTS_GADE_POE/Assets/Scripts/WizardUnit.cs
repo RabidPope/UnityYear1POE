@@ -24,24 +24,24 @@ using System.Runtime.Serialization.Formatters.Binary;
         public char Shape { get => shape; set => shape = value; }
         public bool Attacking { get => attacking; set => attacking = value; }
 
-		public override void Move(int [] position, int ownIndex)
-		{
-            
-            Random rng = new Random();
-
-            if (GameEngine.Rounds % base.speed == 0)
+    public override void Move(int[] position, int ownIndex)
+    {
+        Attacking = false;
+        Random rng = new Random();
+        int[] tempArray = { -1, 1 };
+        if (GameEngine.Rounds % base.speed == 0)
             {
                 double percHP = (double)base.hp / base.maxHP * 100;
                 if (percHP > 50)//Hunt
                 {
-
+                    
                     base.yPos = base.yPos + (Math.Max(-1, Math.Min(position[0] - base.yPos, 1)));
                     base.xPos = base.xPos + (Math.Max(-1, Math.Min(position[1] - base.xPos, 1)));
                 }
                 else//Flee
                 {
-                    base.yPos = Math.Max(0, Math.Min(Map.MapSizeY -1, base.yPos + rng.Next(-1, 2)));
-                    base.xPos = Math.Max(0, Math.Min(Map.MapSizeX -1, base.xPos + rng.Next(-1, 2)));
+                    base.yPos = Math.Max(0, Math.Min(Map.MapSizeY -1, base.yPos + tempArray[rng.Next(0, 2)]));
+                    base.xPos = Math.Max(0, Math.Min(Map.MapSizeX -1, base.xPos + tempArray[rng.Next(0, 2)]));
                 }
             GameManager.UnitsOnField[ownIndex] = this;
             }
@@ -62,7 +62,7 @@ using System.Runtime.Serialization.Formatters.Binary;
             {
                     tempRUnit = (RangedUnit)GameManager.UnitsOnField[index];
                     tempRUnit.Hp = tempRUnit.Hp - base.attack;
-                GameManager.UnitsOnField[index] = tempRUnit;// Do damage to unit at index
+                    GameManager.UnitsOnField[index] = tempRUnit;// Do damage to unit at index
             }
             
            
@@ -84,7 +84,7 @@ using System.Runtime.Serialization.Formatters.Binary;
             MeleeUnit tempMUnit;
             RangedUnit tempRUnit;
             int[] listOfTargets = new int[0];
-        attacking = false;
+            attacking = false;
             string type = "";
            
             int nearest = 999;
@@ -145,7 +145,7 @@ using System.Runtime.Serialization.Formatters.Binary;
             {
                 if (listOfTargets.Length > 0)
                 {
-                attacking = true;
+                    attacking = true;
                     for (int i = 0; i < listOfTargets.Length; ++i)
                     {
                         Engage(listOfTargets[i], type);

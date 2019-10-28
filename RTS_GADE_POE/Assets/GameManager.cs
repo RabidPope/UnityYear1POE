@@ -5,6 +5,7 @@ using System;
 using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
+    public Text resources;
     public GameObject hpBar;
     static Unit[] unitsOnField;
     static Building[] buildingsOnField;
@@ -21,7 +22,7 @@ public class GameManager : MonoBehaviour
     public GameObject wizardPrefab;
     internal static Unit[] UnitsOnField { get => unitsOnField; set => unitsOnField = value; }
     internal static Building[] BuildingsOnField { get => buildingsOnField; set => buildingsOnField = value; }
-
+    public GameObject aoePrefab;
 
     // Start is called before the first frame update
 
@@ -47,7 +48,7 @@ public class GameManager : MonoBehaviour
             // execute block of code here
             engine.GameUpdater();
             UpdatePositions();
-            
+            UpdateUi();
         }
     }
 
@@ -112,6 +113,10 @@ public class GameManager : MonoBehaviour
                     GameObject healthBar = Instantiate(hpBar, new Vector3(tempWUnit.XPos - 10, 1, tempWUnit.YPos - 10), hpBar.transform.rotation);
                     healthBar.transform.Find("FillHB").GetComponent<Image>().fillAmount = (float)tempWUnit.Hp / tempWUnit.MaxHP;
                     healthBar.transform.Find("Name").GetComponent<Text>().text = "Wizard";
+                    if (tempWUnit.Attacking == true)
+                    {
+                        Instantiate(aoePrefab, new Vector3(tempWUnit.XPos - 10, 0, tempWUnit.YPos - 10), new Quaternion(0, 0, 0, 0));
+                    }
                 }
             }
 
@@ -157,6 +162,13 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+
+     
     }
-    
+
+    void UpdateUi()
+    {
+        resources.text = engine.TeamResources;
+    }
+
 }
