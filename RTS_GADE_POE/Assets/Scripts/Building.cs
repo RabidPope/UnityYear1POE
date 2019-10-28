@@ -49,6 +49,7 @@ using System.Runtime.Serialization.Formatters.Binary;
         public string ResourceType { get => resourceType; }
         public int GenPerRound { get => genPerRound; }
         public int Remaining { get => remaining;  }
+        public int MaxHP { get => maxHP; }    
 
         public ResourceBuilding(int xPos, int yPos, int faction, int resourceType, int remaining, int genPerRound) : base(xPos, yPos, 20, faction, '۩')
         {
@@ -116,7 +117,7 @@ using System.Runtime.Serialization.Formatters.Binary;
         public char Shape { get => shape; set => shape = value; }
 
         public int ProdSpeed { get => prodSpeed; }
-        
+        public int MaxHP { get => maxHP; }
 
         public FactoryBuilding(int xPos, int yPos, int faction, int unitType, int spawnPoint) : base (xPos, yPos, 20, faction, '۝')
         {

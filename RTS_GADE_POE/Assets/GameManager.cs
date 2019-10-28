@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
-    
+    public GameObject hpBar;
     static Unit[] unitsOnField;
     static Building[] buildingsOnField;
     Map map;
@@ -78,6 +79,9 @@ public class GameManager : MonoBehaviour
                     {
                         Instantiate(meleePrefabRed, new Vector3(tempMUnit.XPos -10, 0, tempMUnit.YPos - 10), new Quaternion(0, 0, 0, 0));
                     }
+                    GameObject healthBar = Instantiate(hpBar, new Vector3(tempMUnit.XPos - 10, 1, tempMUnit.YPos - 10), hpBar.transform.rotation);
+                    healthBar.transform.Find("FillHB").GetComponent<Image>().fillAmount = (float)tempMUnit.Hp / tempMUnit.MaxHP;
+                    healthBar.transform.Find("Name").GetComponent<Text>().text = "Knight";
                 }
             }
             else if (unitsOnField[i].ToString() == "Archer")
@@ -94,6 +98,9 @@ public class GameManager : MonoBehaviour
                     {
                         Instantiate(rangedPrefabRed, new Vector3(tempRUnit.XPos-10, 0, tempRUnit.YPos -10), new Quaternion(0, 0, 0, 0));
                     }
+                    GameObject healthBar = Instantiate(hpBar, new Vector3(tempRUnit.XPos - 10, 1, tempRUnit.YPos - 10), hpBar.transform.rotation);
+                    healthBar.transform.Find("FillHB").GetComponent<Image>().fillAmount = (float)tempRUnit.Hp / tempRUnit.MaxHP;
+                    healthBar.transform.Find("Name").GetComponent<Text>().text = "Archer";
                 }
             }
             if (unitsOnField[i].ToString() == "Wizard")
@@ -102,6 +109,9 @@ public class GameManager : MonoBehaviour
                 if (tempWUnit.Hp > 0)
                 {
                     Instantiate(wizardPrefab, new Vector3(tempWUnit.XPos - 10, 0, tempWUnit.YPos - 10), new Quaternion(0, 0, 0, 0));
+                    GameObject healthBar = Instantiate(hpBar, new Vector3(tempWUnit.XPos - 10, 1, tempWUnit.YPos - 10), hpBar.transform.rotation);
+                    healthBar.transform.Find("FillHB").GetComponent<Image>().fillAmount = (float)tempWUnit.Hp / tempWUnit.MaxHP;
+                    healthBar.transform.Find("Name").GetComponent<Text>().text = "Wizard";
                 }
             }
 
@@ -115,12 +125,15 @@ public class GameManager : MonoBehaviour
                 {
                     if (tempBuild.Faction == 0)
                     {
-                        Instantiate(blueBuilding, new Vector3(tempBuild.XPos - 10, 0, tempBuild.YPos - 10), new Quaternion(0, 0, 0, 0));
+                        Instantiate(blueBuilding, new Vector3(tempBuild.XPos - 10, -1, tempBuild.YPos - 10), new Quaternion(0, 0, 0, 0));
                     }
                     else
                     {
-                        Instantiate(redBuilding, new Vector3(tempBuild.XPos - 10, 0, tempBuild.YPos - 10), new Quaternion(0, 0, 0, 0));
+                        Instantiate(redBuilding, new Vector3(tempBuild.XPos - 10, -1, tempBuild.YPos - 10), new Quaternion(0, 0, 0, 0));
                     }
+                    GameObject healthBar = Instantiate(hpBar, new Vector3(tempBuild.XPos - 10, 1, tempBuild.YPos - 10), hpBar.transform.rotation);
+                    healthBar.transform.Find("FillHB").GetComponent<Image>().fillAmount = (float)tempBuild.HP / tempBuild.MaxHP;
+                    healthBar.transform.Find("Name").GetComponent<Text>().text = "Resource";
                 }
             }
             else
@@ -132,12 +145,15 @@ public class GameManager : MonoBehaviour
 
                     if (tempBuild.Faction == 0)
                     {
-                        Instantiate(blueBuilding, new Vector3(tempBuild.XPos - 10, 0, tempBuild.YPos - 10), new Quaternion(0, 0, 0, 0));
+                        Instantiate(blueBuilding, new Vector3(tempBuild.XPos - 10, -1, tempBuild.YPos - 10), new Quaternion(0, 0, 0, 0));
                     }
                     else
                     {
-                        Instantiate(redBuilding, new Vector3(tempBuild.XPos - 10, 0, tempBuild.YPos - 10), new Quaternion(0, 0, 0, 0));
+                        Instantiate(redBuilding, new Vector3(tempBuild.XPos - 10, -1, tempBuild.YPos - 10), new Quaternion(0, 0, 0, 0));
                     }
+                    GameObject healthBar = Instantiate(hpBar, new Vector3(tempBuild.XPos - 10, 1, tempBuild.YPos - 10), hpBar.transform.rotation);
+                    healthBar.transform.Find("FillHB").GetComponent<Image>().fillAmount = (float)tempBuild.HP / tempBuild.MaxHP;
+                    healthBar.transform.Find("Name").GetComponent<Text>().text = "Factory";
                 }
             }
         }
